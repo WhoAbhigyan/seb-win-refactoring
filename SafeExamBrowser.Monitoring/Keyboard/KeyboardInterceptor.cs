@@ -73,9 +73,12 @@ namespace SafeExamBrowser.Monitoring.Keyboard
 			block |= modifier.HasFlag(KeyModifier.Alt) && key == Key.Tab;
 
 			block |= modifier.HasFlag(KeyModifier.Ctrl) && key == Key.C && !settings.AllowCtrlC;
+			block |= modifier.HasFlag(KeyModifier.Ctrl) && key == Key.Insert && !settings.AllowCtrlC;
 			block |= modifier.HasFlag(KeyModifier.Ctrl) && key == Key.Escape && !settings.AllowCtrlEsc;
 			block |= modifier.HasFlag(KeyModifier.Ctrl) && key == Key.V && !settings.AllowCtrlV;
+			block |= modifier.HasFlag(KeyModifier.Shift) && key == Key.Insert && !settings.AllowCtrlV;
 			block |= modifier.HasFlag(KeyModifier.Ctrl) && key == Key.X && !settings.AllowCtrlX;
+			block |= modifier.HasFlag(KeyModifier.Shift) && key == Key.Delete && !settings.AllowCtrlX;
 
 			block |= modifier.HasFlag(KeyModifier.Injected) && !settings.AllowInjected;
 
