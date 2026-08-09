@@ -17,7 +17,7 @@ namespace SafeExamBrowser.WindowsApi.Hooks
 {
 	internal class KeyboardHook
 	{
-		private bool altPressed, ctrlPressed;
+		private bool altPressed, ctrlPressed, shiftPressed;
 		private KeyboardHookCallback callback;
 		private IntPtr handle;
 		private HookDelegate hookDelegate;
@@ -84,7 +84,7 @@ namespace SafeExamBrowser.WindowsApi.Hooks
 		{
 			var modifier = KeyModifier.None;
 
-			TrackCtrlAndAlt(keyData, wParam);
+			TrackModifiers(keyData, wParam);
 
 			if (altPressed || keyData.Flags.HasFlag(KBDLLHOOKSTRUCTFlags.LLKHF_ALTDOWN))
 			{
@@ -96,6 +96,11 @@ namespace SafeExamBrowser.WindowsApi.Hooks
 				modifier |= KeyModifier.Ctrl;
 			}
 
+			if (shiftPressed)
+			{
+				modifier |= KeyModifier.Shift;
+			}
+
 			if(keyData.Flags.HasFlag(KBDLLHOOKSTRUCTFlags.LLKHF_INJECTED) || keyData.Flags.HasFlag(KBDLLHOOKSTRUCTFlags.LLKHF_LOWER_IL_INJECTED))
 			{
 				modifier |= KeyModifier.Injected;
@@ -104,7 +109,7 @@ namespace SafeExamBrowser.WindowsApi.Hooks
 			return modifier;
 		}
 
-		private void TrackCtrlAndAlt(KBDLLHOOKSTRUCT keyData, int wParam)
+		private void TrackModifiers(KBDLLHOOKSTRUCT keyData, int wParam)
 		{
 			var keyCode = keyData.KeyCode;
 
@@ -116,12 +121,17 @@ namespace SafeExamBrowser.WindowsApi.Hooks
 			{
 				altPressed = IsPressed(wParam);
 			}
+			else if (keyCode == (uint) VirtualKeyCode.LeftShift || keyCode == (uint) VirtualKeyCode.RightShift)
+			{
+				shiftPressed = IsPressed(wParam);
+			}
 
 			if (ctrlPressed && altPressed && keyCode == (uint) VirtualKeyCode.Delete)
 			{
 				// When the Secure Attention Sequence is pressed, the WM_KEYUP / WM_SYSKEYUP messages for CTRL and ALT get lost...
 				ctrlPressed = false;
 				altPressed = false;
+				shiftPressed = false;
 			}
 		}
 
