@@ -18,8 +18,10 @@ namespace SafeExamBrowser.WindowsApi.Constants
 		Delete = 0x2E,
 		LeftAlt = 0xA4,
 		LeftControl = 0xA2,
+		LeftShift = 0xA0,
 		LeftWindows = 0x5B,
 		RightAlt = 0xA5,
-		RightControl = 0xA3
+		RightControl = 0xA3,
+		RightShift = 0xA1
 	}
 }
